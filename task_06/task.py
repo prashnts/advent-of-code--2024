@@ -1,7 +1,6 @@
 import os
 from tqdm import tqdm
 from itertools import cycle
-from functools import cmp_to_key
 
 __here__ = os.path.dirname(__file__)
 
