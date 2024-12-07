@@ -34,12 +34,11 @@ def parse_data(data: str):
 def visits(board, a, b):
     directions = cycle(['^', '>', 'v', '<'])
 
-    direction = next(directions)
-    last_turns = []
-
     visited = set()
     directional_visit = set()
+
     x, y = a, b
+    direction = next(directions)
 
     while True:
         visited.add((x, y))
@@ -50,9 +49,6 @@ def visits(board, a, b):
             '<': (-1, 0)
         }[direction]
         nx, ny = x + dx, y + dy
-
-        if len(last_turns) > 10:
-            last_turns = last_turns[-10:]
             
         if (x, y, direction) in directional_visit:
             raise TypeError("Looping")
@@ -93,9 +89,6 @@ if __name__=='__main__':
     assert visits(board, a, b) == 41
     assert block_all(board, a, b) == 6
 
-    print('---')
-
     board, a, b = parse_data(INPUT)
-
     print(visits(board, a, b))
     print(block_all(board, a, b))

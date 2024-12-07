@@ -23,52 +23,36 @@ def parse_data(data: str):
         target, values = line.split(': ')
         yield int(target), list(map(int, values.split()))
 
-def can_solve(target, equation, accum=0, ops=None):
-    if ops is None:
-        ops = []
-    if len(equation) == 1:
-        x = accum + equation[0]
-        y = accum * equation[0]
-
-        if x == target or y == target:
-            return True, ops + ['+'] if x == target else ops + ['*']
-        return False
-    
+def can_solve(target, equation, accum=0):
     a, *equation = equation
-
     x = accum + a
     y = accum * a
 
+    if len(equation) == 0:
+        return x == target or y == target
+    
     if x > target and y > target:
         return False
 
-    return can_solve(target, equation, x, ops + ['+']) or can_solve(target, equation, y, ops + ['*'])
+    return can_solve(target, equation, x) or can_solve(target, equation, y)
 
-def can_solve_concat(target, equation, accum=0, ops=None):
-    if ops is None:
-        ops = []
-    if len(equation) == 1:
-        x = accum + equation[0]
-        y = accum * equation[0]
-        z = int(str(accum) + str(equation[0]))
 
-        if x == target or y == target or z == target:
-            return True, ops + ['+'] if x == target else ops + ['*'] if y == target else ops + ['||']
-        return False
-    
+def can_solve_concat(target, equation, accum=0):
     a, *equation = equation
-
     x = accum + a
     y = accum * a
     z = int(str(accum) + str(a))
+
+    if len(equation) == 0:
+        return x == target or y == target or z == target
 
     if x > target and y > target and z > target:
         return False
 
     return any([
-        can_solve_concat(target, equation, x, ops + ['+']),
-        can_solve_concat(target, equation, y, ops + ['*']),
-        can_solve_concat(target, equation, z, ops + ['||']),
+        can_solve_concat(target, equation, x),
+        can_solve_concat(target, equation, y),
+        can_solve_concat(target, equation, z),
     ])
 
 
