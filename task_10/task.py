@@ -42,25 +42,20 @@ def find_trails(board, head, allow_paths=False):
             if c in board and board[c] == board[(x, y)] + 1:
                 yield c
 
-    def trails(x, y, path, allow_paths=False):
-        cells = list(neighbors(x, y))
-        current = board[(x, y)]
-        path.append((x, y))
+    def trails(node, path):
+        path.append(node)
 
-        if current == 9:
+        if board[node] == 9:
             yield path
-        
-        if not cells:
+
+        for cell in neighbors(*node):
+            if not allow_paths and cell in path:
+                continue
+            yield from trails(cell, path)
+        else:
             yield None
 
-        for cell in cells:
-            if not allow_paths:
-                if cell in path:
-                    continue
-            yield from trails(cell[0], cell[1], path, allow_paths)
-
-    x, y = head
-    yield from trails(x, y, [], allow_paths)
+    yield from trails(head, [])
 
 
 def trail_count(data: str):
