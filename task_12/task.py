@@ -47,7 +47,7 @@ def find_regions(data: str):
             else:
                 yield None
 
-    def perimeter(cell):
+    def fence_perimeter(cell):
         value = board[cell]
         # Count the number of total neighbors non equal.
         return 4 - len([n for n in neighbors(*cell) if n != None and board[n] == value])
@@ -88,17 +88,15 @@ def find_regions(data: str):
             n = q.pop(0)
 
             for c in neighbors(*n):
-                if c in cells:
-                    if board[c] == board[n]:
-                        q.append(c)
-                        region.add(c)
-                        cells.remove(c)
+                if c in cells and board[c] == board[n]:
+                    q.append(c)
+                    region.add(c)
+                    cells.remove(c)
+
+        yield region
 
         if cells:
             yield from contiguos_regions(cells)
-        
-        yield region
-
     
     accum_1 = 0
     accum_2 = 0
@@ -106,10 +104,10 @@ def find_regions(data: str):
     for value, cells in regions.items():
         for region in contiguos_regions(cells):
             area = len(region)
-            perimeter_sum = sum(perimeter(cell) for cell in region)
+            perimeter = sum(map(fence_perimeter, region))
             sides = count_sides(region)
 
-            accum_1 += area * perimeter_sum
+            accum_1 += area * perimeter
             accum_2 += area * sides
 
     yield accum_1
