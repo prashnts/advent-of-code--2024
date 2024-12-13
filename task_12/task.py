@@ -1,6 +1,5 @@
 import os
 from collections import defaultdict
-from itertools import combinations, permutations
 
 __here__ = os.path.dirname(__file__)
 
