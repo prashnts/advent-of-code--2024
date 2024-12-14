@@ -1,8 +1,8 @@
 import re
 import os
-from tqdm import tqdm
+import operator
 from collections import defaultdict
-from functools import cache
+from functools import cache, reduce
 
 __here__ = os.path.dirname(__file__)
 
@@ -34,16 +34,16 @@ def parse_data(data: str):
 @cache
 def simulate(p, v, x_max, y_max, steps):
     for _ in range(steps):
-        n_p = (p[0] + v[0], p[1] + v[1])
-        if n_p[0] < 0:
-            n_p = (x_max + n_p[0], n_p[1])
-        if n_p[1] < 0:
-            n_p = (n_p[0], y_max + n_p[1])
-        if n_p[0] >= x_max:
-            n_p = (n_p[0] - x_max, n_p[1])
-        if n_p[1] >= y_max:
-            n_p = (n_p[0], n_p[1] - y_max)
-        p = n_p
+        q = (p[0] + v[0], p[1] + v[1])
+        if q[0] < 0:
+            q = (x_max + q[0], q[1])
+        if q[1] < 0:
+            q = (q[0], y_max + q[1])
+        if q[0] >= x_max:
+            q = (q[0] - x_max, q[1])
+        if q[1] >= y_max:
+            q = (q[0], q[1] - y_max)
+        p = q
     return p
 
 
@@ -76,7 +76,8 @@ def safety_factor(data: str, x_max: int, y_max: int):
             if q[0][0] <= pos[0] < q[1][0] and q[0][1] <= pos[1] < q[1][1]:
                 items_in_quads[i].append(count)
 
-    yield sum(items_in_quads[0]) * sum(items_in_quads[1]) * sum(items_in_quads[2]) * sum(items_in_quads[3])
+    yield reduce(operator.mul, map(sum, items_in_quads), 1)
+
 
     pos_vel = [(p, v) for p, v in parse_data(data)]
 
