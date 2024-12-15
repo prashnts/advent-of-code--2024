@@ -1,4 +1,5 @@
 import os
+import time
 from collections import namedtuple
 
 __here__ = os.path.dirname(__file__)
@@ -216,8 +217,10 @@ def gps_sum(data: str):
     board, pos, moves = enlarge_board(data)
 
     for dir in moves:
+        # print('\033[2J', flush=True)
         board, pos = move_2(board, dir, pos)
-        # print(print_board(board))
+        print(print_board(board), flush=True)
+        time.sleep(0.005)
 
     total = 0
 
