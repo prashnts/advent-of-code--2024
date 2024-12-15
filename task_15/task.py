@@ -1,35 +1,7 @@
-import re
 import os
-import operator
 from collections import namedtuple
-from functools import cache, reduce
 
 __here__ = os.path.dirname(__file__)
-
-TEST_DATA_1 = '''\
-########
-#..O.O.#
-##@.O..#
-#...O..#
-#.#.O..#
-#...O..#
-#......#
-########
-
-<^^>>>vv<v>>v<<
-'''.strip()
-
-TEST_DATA_2 = '''\
-#######
-#...#.#
-#.....#
-#..OO@#
-#..O..#
-#.....#
-#######
-
-<vv<<^^<<^^
-'''.strip()
 
 TEST_DATA = '''\
 ##########
@@ -167,8 +139,6 @@ def move_2(board, direction, pos):
         next_board[next_pos] = '@'
         return next_board, next_pos
 
-    # move boxes
-    # find all the boxes until we get empty space or wall
     box = board[next_pos]
     assert type(box) == Box
     boxes = [box]
@@ -178,7 +148,6 @@ def move_2(board, direction, pos):
     while new_boxes:
         b = new_boxes.pop()
 
-        # next cells
         b1 = (b.x + fx, b.y + fy)
         b2 = (b.x + 1 + fx, b.y + fy)
 
@@ -245,9 +214,6 @@ def gps_sum(data: str):
     yield total
 
     board, pos, moves = enlarge_board(data)
-    x_coord, y_coord = zip(*board.keys())
-    x_max, y_max = max(x_coord), max(y_coord)
-
 
     for dir in moves:
         board, pos = move_2(board, dir, pos)
