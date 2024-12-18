@@ -101,8 +101,7 @@ def maze_finder(data: str, bounds, count):
     def dijkstra(graph, start, end_nodes):
         all_short_paths = []
         min_cost = float('inf')
-        c = 0
-        pq = [(0, c, start, [start])]
+        pq = [(0, 0, start, [start])]
         pathcosts = defaultdict(lambda: float('inf'))
         pathcosts[start] = 0
 
@@ -123,8 +122,7 @@ def maze_finder(data: str, bounds, count):
                 new_cost = cost + edge_cost
                 if new_cost < pathcosts[next_node]:
                     pathcosts[next_node] = new_cost
-                    # c += 1
-                    heapq.heappush(pq, (new_cost, d+1, next_node, path + [next_node]))
+                    heapq.heappush(pq, (new_cost, d + 1, next_node, path + [next_node]))
         
         return all_short_paths, min_cost
     
