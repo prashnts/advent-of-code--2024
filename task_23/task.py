@@ -1,9 +1,6 @@
 import os
 import networkx as nx
 
-from functools import cache
-from collections import namedtuple, defaultdict
-
 __here__ = os.path.dirname(__file__)
 
 TEST_DATA = '''\
@@ -65,7 +62,3 @@ if __name__=='__main__':
     run = solve(INPUT)
     print(next(run))
     print(next(run))
-
-
-
-    
