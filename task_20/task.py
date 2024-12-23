@@ -148,7 +148,6 @@ def maze_finder(data: str, target: int):
     yield costs
 
 
-
 if __name__=='__main__':
     assert next(maze_finder(TEST_DATA, 2)) == 14
     assert next(maze_finder(TEST_DATA, 4)) == 14
