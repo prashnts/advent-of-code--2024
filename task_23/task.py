@@ -42,16 +42,11 @@ with open(f'{__here__}/input.txt') as fp:
     INPUT = fp.read().strip()
 
 
-def solve(data: str, k: int = 3):
+def solve(data: str):
     G = nx.Graph()
     G.add_edges_from(e.split('-') for e in data.splitlines())
 
-    sum = 0
-    for g in nx.simple_cycles(G, k):
-        if any([x[0] == 't' for x in g]):
-            sum += 1
-
-    yield sum
+    yield len([1 for g in nx.simple_cycles(G, 3) if any([x[0] == 't' for x in g])])
     yield ','.join(sorted(max(nx.enumerate_all_cliques(G), key=len)))
 
 if __name__=='__main__':
