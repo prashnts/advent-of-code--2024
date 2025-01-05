@@ -31,11 +31,13 @@ def solve(data: str):
 
     for s in data.splitlines():
         secrets = list(next_secret(int(s), 2000))
-        print(secrets)
         sum += secrets[-1]
     
     yield sum
 
+    for s in data.splitlines():
+        secrets = list()
+        prices = [s % 10 for s in secrets]
 
 
 if __name__=='__main__':

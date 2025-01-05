@@ -3,6 +3,7 @@ import os
 import networkx as nx
 
 from tqdm import tqdm
+from itertools import combinations
 from collections import namedtuple, defaultdict, Counter
 
 __here__ = os.path.dirname(__file__)
@@ -68,13 +69,21 @@ step_factor = {
     '>': P(1, 0),
 }
 
-def maze_finder(data: str, target: int):
+def maze_finder(data: str, target: int, pt2=False):
     board, start, end = parse_data(data)
     graph = defaultdict(defaultdict)
+    wgraph = defaultdict(defaultdict)
     cheats = []
+    cwalls = []
 
     for n in board:
         if board[n] == '#':
+            wgraph[n][t] = 1
+            wgraph[t][n] = 1
+            for d in step_factor.values():
+                t = P(n.x + d.x, n.y + d.y)
+                if t in board and board[t] != '#':
+                    cwalls.append(n)
             continue
 
         for d in step_factor.values():
@@ -93,7 +102,7 @@ def maze_finder(data: str, target: int):
                 continue
             graph[n][t] = 1
             graph[t][n] = 1
-
+    
     def dijkstra(graph, start, end_nodes):
         all_short_paths = []
         min_cost = float('inf')
@@ -129,6 +138,12 @@ def maze_finder(data: str, target: int):
     
     min_costs = []
     print(f'Max cost: {max_cost}')
+
+    WG = nx.Graph()
+    WG.add_weighted_edges_from([(n, s, 1) for n in wgraph for s in wgraph[n]])
+
+
+    combinations(cwalls, 2)
 
     for c in tqdm(set(cheats), disable=max_cost < 100):
         n, s = c
